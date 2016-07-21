@@ -1,1 +1,1 @@
-# API-Todoist
+# Todoist Perl API library (v7)
