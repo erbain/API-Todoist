@@ -126,7 +126,7 @@ sub sync {
 
 }
 
-sub project_add {
+sub add_project {
   my $self = shift;
   my $args = shift;
 
@@ -142,12 +142,11 @@ sub project_add {
     $res = $self->_post({ commands => $self->json->encode( [ $params ] ) });
   }
   else {
-    push @{$self->queue}
+    push @{$self->queue}, $params;
   }
 
   return $res;
 }
-
 
 sub get_project {
   my $self = shift;
@@ -160,6 +159,30 @@ sub get_project {
   }
   return;
 }
+
+
+sub add_item{
+  my $self = shift;
+  my $args = shift;
+
+  my $params = {
+    type => 'item_add',
+    uuid => Data::UUID->new()->create_str(),
+    temp_id => Data::UUID->new()->create_str(),
+    args => $args
+  };
+
+  my $res;
+  if ($self->realtime) {
+    $res = $self->_post({ commands => $self->json->encode( [ $params ] ) });
+  }
+  else {
+    push @{$self->queue}, $params;
+  }
+
+  return $res;
+}
+
 
 sub _get {
   my $self    = shift;
